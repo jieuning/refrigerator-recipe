@@ -15,7 +15,7 @@ export const PublicTabBar = () => {
                 </a>
             </div>
             <div class="tab">
-                <a href="#">
+                <a href="http://127.0.0.1:5500/views/recipe/index.html#">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
                         <g fill="none">
                             <path
@@ -28,7 +28,7 @@ export const PublicTabBar = () => {
                 </a>
             </div>
             <div class="tab">
-                <a href="#">
+                <a href="http://127.0.0.1:5500/views/bookmark/index.html#">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
                         <path fill="#e1e1e1" d="M17 3H7a2 2 0 0 0-2 2v16l7-3l7 3V5a2 2 0 0 0-2-2" />
                     </svg>

@@ -1,13 +1,18 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
 
+// 공용 탭바 렌더링
+const tabBarRender = () => {
+    return PublicTabBar();
+};
+tabBarRender();
 
+const levelArr = ['초보환영', '보통', '어려움'];
 const itemFilters = document.querySelectorAll(".recipe_filter span");
 let currentTarget = itemFilters[0];
 
 const fetchData = async () => {
     const API_KEY = '66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49';
     const url = new URL(`http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1/1/10`);
-    console.log(url);
 
     try{
         const res = await fetch(url);
@@ -17,17 +22,17 @@ const fetchData = async () => {
 
         const result = await res.json();
         const data = result.Grid_20150827000000000226_1.row;
-        currentTarget.classList.add("on");
+        console.log(data);
 
-        // 낮은 난이도 순으로 정렬
-        const levelArr = ['초보환영', '보통', '어려움'];
+        // 낮은 난이도 순으로 정렬 초기값
+        currentTarget.classList.add("on");
         const lowLevel = data.sort((a, b) => {
             return levelArr.indexOf(a.LEVEL_NM) - levelArr.indexOf(b.LEVEL_NM);
         });
         
-        for(let i=0; i<itemFilters.length; i++) {
-            itemFilters[i].addEventListener("click", (e) => handleClickFilter(e, data));
-        };
+        itemFilters.forEach(filterBtn => {
+            filterBtn.addEventListener("click", (e) => handleClickFilter(e, data));
+        })
 
         recipeListRender(lowLevel);
     }catch(error) {
@@ -36,20 +41,20 @@ const fetchData = async () => {
 };
 fetchData();
 
-const recipeListHtml = (data) => {
+const recipeCardHtml = (data) => {
     return `
-        <li class="recipe_list">
+        <li class="item_list">
             <div class="img_wrap">
-                <a href="#">
+                <a href=${`http://127.0.0.1:5500/views/detail/index.html#?id=${data.RECIPE_ID}`}>
                     <img src="/image/fake_img.png"/>
                 </a>
             </div>                
-            <article class="recipe_contents">
+            <article class="item_contents">
                 <div class="title_wrap">
-                    <h2 class="recipe_title">${data.RECIPE_NM_KO}</h2>
-                    <p class="recipe_Summary">${data.SUMRY}</p>
+                    <h2 class="item_title">${data.RECIPE_NM_KO}</h2>
+                    <p class="item_Summary">${data.SUMRY}</p>
                 </div>
-                <div class="recipe_tags">
+                <div class="item_tags">
                     <span class="level">${data.LEVEL_NM}</span>
                     <span class="cooking_time">${data.COOKING_TIME}</span>
                     <span class="bookmark"></span>
@@ -61,27 +66,27 @@ const recipeListHtml = (data) => {
 
 const recipeLists = document.querySelector(".recipe_lists");
 
-const recipeListRender = (soltedData, target = currentTarget) => {
+const recipeListRender = (sortedData, target = currentTarget) => {
     recipeLists.innerHTML = '';
 
     currentTarget.classList.remove("on");
     target.classList.add("on");
     currentTarget = target;
 
-    soltedData.forEach(data => {
-        recipeLists.innerHTML += recipeListHtml(data);
+    sortedData.forEach(data => {
+        recipeLists.innerHTML += recipeCardHtml(data);
     });
 };
 
 const handleClickFilter = (event, data) => {
     let target = event.target;
-    let soltedData = soltedFilter(data, target);
+    let sortedData = returnSortedData(data, target);
 
-    recipeListRender(soltedData, target);
+    // 필터링된 데이터로 재렌더링
+    recipeListRender(sortedData, target);
 };
 
-const soltedFilter = (data, target) => {
-    const levelArr = ['초보환영', '보통', '어려움'];
+const returnSortedData = (data, target) => {
     const targetValue = target.innerText;
 
     if(targetValue === "낮은 난이도") {
@@ -107,8 +112,5 @@ const soltedFilter = (data, target) => {
     }
 };
 
-const tabBarRender = () => {
-    return PublicTabBar();
-};
-tabBarRender();
+
 
