@@ -1,11 +1,11 @@
 export const PublicTabBar = () => {
-    const createNavElement = document.createElement("nav");
-    createNavElement.className = "tab_bar";
+  const createNavElement = document.createElement("nav");
+  createNavElement.className = "tab_bar";
 
-    createNavElement.innerHTML = `
+  createNavElement.innerHTML = `
         <div class="tab_bar_wrap">
             <div class="tab">
-                <a href="#">
+                <a href="http://127.0.0.1:5500/views/main/index.html#">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
                         <path fill="#e1e1e1" stroke="#e1e1e1" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2"
@@ -38,5 +38,5 @@ export const PublicTabBar = () => {
         </div>
     `;
 
-    document.body.append(createNavElement);
+  document.body.append(createNavElement);
 };

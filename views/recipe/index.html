@@ -6,28 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./recipe.css">
     <link rel="stylesheet" href="../public/style/common.css">
+    <script type="module" src="./recipe.js"></script>
     <title>냉장고 레시피</title>
 </head>
 
 <body>
-    <header>
-        <h1 class="header_title">전체 레시피</h1>
-    </header>
-    <div class="container">
-        <section class="recipe_section recipe_filter">
-            <div class="recipe_filter_wrap">
-                <span>낮은 난이도</span>
-                <span>높은 난이도</span>
-                <span>짧은 조리시간</span>
-                <span>긴 조리시간</span>
-            </div>
-        </section>
-        <section class="recipe_section recipe_item">
-            <ul class="recipe_lists"></ul>
-        </section>
+    <div class="recipe_container">
+        <header>
+            <h1 class="header_title">전체 레시피</h1>
+        </header>
+        <div class="recipe">
+            <section class="recipe_section recipe_filter">
+                <div class="recipe_filter_wrap">
+                    <span>낮은 난이도</span>
+                    <span>높은 난이도</span>
+                    <span>짧은 조리시간</span>
+                    <span>긴 조리시간</span>
+                </div>
+            </section>
+            <section class="recipe_section recipe_item">
+                <ul class="item_lists"></ul>
+            </section>
+        </div>
     </div>
-
-    <script type="module" src="./recipe.js"></script>
 </body>
 
 </html>
