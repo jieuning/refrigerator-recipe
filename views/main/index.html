@@ -11,15 +11,31 @@
 </head>
 
 <body>
-    <header>
-        <h1 class="header_title">추천 레시피</h1>
-    </header>
-    <section class="main">
-        <div class="empty_wrap">
-            <img class="empty_icon" src="../../image/ refrigerator_icon.png" alt="냉장고 아이콘" />
-            <span class="empty_title">마음에 드는 레시피를<br />지금 바로 추가해보세요.</span>
+    <div id="container" class="main_container">
+        <div class="shadow"></div>
+        <header>
+            <div class="main_header">
+                <h1 class="header_title">추천 레시피</h1>
+            </div>
+        </header>
+        <section class="main"></section>
+        <button class="open_modal_btn"></button>
+    </div>
+    <div class="add_modal">
+        <span class="touch_close"></span>
+        <h2 class="modal_title">재료 추가하기</h2>
+        <div class="add_input">
+            <label for="food">
+                <h2>냉장고 재료</h2>
+                <input type="text" name="food" id="ingred_txt" placeholder="냉장고 재료를 추가해주세요(하나만 가능)">
+            </label>
+            <label for="food">
+                <h2>유통 기한</h2>
+                <input type="date" name="date" id="expiration_date">
+            </label>
+            <button class="submit_btn" type="submit">재료 추가하기</button>
         </div>
-    </section>
+    </div>
 </body>
 
 </html>

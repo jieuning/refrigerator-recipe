@@ -1,1 +1,160 @@
 @charset 'utf-8';
+
+.main_container {
+  position: relative;
+}
+
+/* 재료 추가 모달 */
+.shadow {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.touch_close {
+  align-self: center;
+  width: 32px;
+  height: 3px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  text-align: center;
+  background-color: #ccc;
+  cursor: grab;
+  touch-action: none;
+}
+
+.modal_title {
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.add_input label h2 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.add_input label input {
+  width: 100%;
+  height: 38px;
+  padding-left: 10px;
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add_input label input:focus {
+  border: 1px solid #58b93f;
+}
+
+.add_input {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.add_modal {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  padding: 0;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  background-color: #fff;
+  z-index: 20;
+  transition: 0.4s ease;
+}
+
+.shadow.on {
+  display: block;
+}
+.add_modal.on {
+  display: flex;
+  height: 38%;
+  padding: 10px 20px 40px 20px;
+}
+
+.submit_btn {
+  height: 38px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #58b93f;
+}
+
+/* 추가하기 버튼 */
+.open_modal_btn {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0;
+  bottom: 68px;
+  width: 48px;
+  height: 48px;
+  margin: 0 25px 25px 0;
+  border: none;
+  border-radius: 50px;
+  background-color: #c5e0c6;
+  cursor: pointer;
+}
+
+.open_modal_btn::after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 32px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: none;
+  background-image: url(../../image/add_icon.png);
+}
+
+/* 추가된 재료들 */
+.main {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.ingredient .d_day {
+  margin-right: 2px;
+  padding: 2px 6px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #58b93f;
+  background-color: #fff;
+}
+
+.ingredient .ingred_name {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 10px 6px 6px;
+  line-height: 1.2;
+  border-radius: 30px;
+  color: #1a1a1a;
+  background-color: #b9ddb0;
+}
+
+.delete_btn {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-bottom: 2px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url(../../image/delete_btn.png);
+}

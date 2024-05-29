@@ -2,7 +2,8 @@ import { PublicTabBar } from "../public/js/tabBar.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
-  return PublicTabBar();
+  const container = document.querySelector("#container");
+  return PublicTabBar(container);
 };
 tabBarRender();
 
@@ -39,7 +40,7 @@ const markedItemRender = (activeData) => {
   } else {
     bookmarkLists.innerHTML = `
         <div class="empty_wrap">
-            <img class="empty_icon" src="../../image/no_bookmark.png" />
+            <img class="empty_icon" src="../../image/egg_icon.png" />
             <span class="empty_title">마음에 드는 레시피를<br/>지금 바로 추가해보세요.</span>
         </div>
     `;

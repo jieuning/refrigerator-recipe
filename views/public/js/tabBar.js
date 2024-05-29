@@ -1,4 +1,5 @@
-export const PublicTabBar = () => {
+export const PublicTabBar = (container) => {
+  console.log(container);
   const createNavElement = document.createElement("nav");
   createNavElement.className = "tab_bar";
 
@@ -38,5 +39,5 @@ export const PublicTabBar = () => {
         </div>
     `;
 
-  document.body.append(createNavElement);
+  container.append(createNavElement);
 };
