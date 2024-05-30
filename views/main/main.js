@@ -1,8 +1,10 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
+import { WarningModal } from "../public/js/modal.js";
+
+const container = document.querySelector("#container");
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
-  const container = document.querySelector("#container");
   return PublicTabBar(container);
 };
 tabBarRender();
@@ -82,50 +84,61 @@ const submitBtn = document.querySelector(".submit_btn");
 const ingredInput = document.querySelector("#ingred_txt");
 const expirInput = document.querySelector("#expiration_date");
 let today = new Date();
+let message;
 
-const clickAddIngred = () => {
-  // 버튼 클릭시 초기화
-  mainSection.innerHTML = "";
-  // 디데이
-  let expirDate = new Date(expirInput.value);
-  const dDay = expirDday(expirDate);
-  // 데이터 로컬에 저장
-  getIngred.push({
-    ingredient: ingredInput.value,
-    dday: dDay,
-  });
+const clickSubmitBtn = () => {
+  const ingredValue = ingredInput.value;
+  const expirValue = expirInput.value;
 
-  // 렌더링
-  renderHtml();
+  if (ingredValue.trim("") !== "" && expirValue.trim("") !== "") {
+    // 버튼 클릭시 초기화
+    mainSection.innerHTML = "";
 
-  // 로컬 업데이트
-  localStorage.setItem("ingredient", JSON.stringify(getIngred));
+    // 중복된 재료가 있는지 확인
+    const ingredInclude = getIngred.some(
+      (ingred) => ingred.ingredient == ingredValue
+    );
+
+    // 디데이
+    let expirDate = new Date(expirInput.value);
+    const dDay = expirDday(expirDate);
+
+    // 데이터 로컬에 저장
+    getIngred.push({
+      ingredient: ingredInput.value,
+      dday: dDay,
+    });
+
+    if (!ingredInclude) {
+      // 재료 추가시 렌더링
+      renderHtml();
+
+      // 로컬 업데이트
+      localStorage.setItem("ingredient", JSON.stringify(getIngred));
+    } else {
+      // 조건에 걸리는 마지막 데이터 제외하고 렌더링
+      initRender();
+
+      message = "이미 추가된 재료입니다.";
+      WarningModal(message);
+    }
+  } else {
+    message = "냉장고 재료 및 날짜를 모두 입력해주세요.";
+    WarningModal(message);
+  }
 };
-submitBtn.addEventListener("click", () => clickAddIngred());
+submitBtn.addEventListener("click", () => clickSubmitBtn());
 
 const ingredHtml = (ingred) => {
   return `
       <div class="ingredient">
-          <div class="ingred_name">
+          <div class="ingred_wrap">
               <span class="d_day">D${ingred.dday}</span>
-              ${ingred.ingredient}
+              <span class="name">${ingred.ingredient}</span>
               <span class="delete_btn"></span>
           </div>
       </div>`;
 };
-
-const renderHtml = () => {
-  console.log(getIngred);
-  if (getIngred.length !== 0) {
-    getIngred.forEach((ingredData) => {
-      mainSection.innerHTML += ingredHtml(ingredData);
-    });
-    ingredInput.value = "";
-  } else {
-    mainSection.innerHTML = emptyHtml();
-  }
-};
-renderHtml();
 
 const expirDday = (expirDate) => {
   // 디데이 계산
@@ -134,14 +147,62 @@ const expirDday = (expirDate) => {
   return diff;
 };
 
-const deleteBtn = document.querySelectorAll(".delete_btn");
-const clickDeleteIngred = (index) => {
-  console.log(index);
-  // 로컬 데이터의 인덱스와 같으면 삭제 하면됨
+const removeEvent = () => {
+  const deleteBtn = document.querySelectorAll(".delete_btn");
+
+  deleteBtn.forEach((_, i) => {
+    const ingredWrap = deleteBtn[i].closest(".ingred_wrap");
+    const nameTxt = ingredWrap.children[1].innerText;
+    deleteBtn[i].addEventListener("click", () => clickDeleteIngred(nameTxt));
+  });
 };
-deleteBtn.forEach((_, i) => {
-  deleteBtn[i].addEventListener("click", () => clickDeleteIngred(i));
-});
+
+const clickDeleteIngred = (name) => {
+  // 로컬 데이터의 인덱스와 다른 것만 가져와서 삭제 하면됨
+  getIngred = getIngred.filter((ingred) => ingred.ingredient !== name);
+  localStorage.setItem("ingredient", JSON.stringify(getIngred));
+
+  // 이전 렌더링 초기화 후 삭제된 데이터로 다시 렌더링
+  mainSection.innerHTML = "";
+  renderHtml();
+};
+
+const renderHtml = () => {
+  if (getIngred.length !== 0) {
+    getIngred.forEach((ingredData) => {
+      mainSection.innerHTML += ingredHtml(ingredData);
+    });
+    ingredInput.value = "";
+
+    if (getIngred.length > 10) {
+      // 조건에 걸리는 마지막 데이터 제외하고 렌더링
+      initRender();
+
+      message = "총 10개까지만 추가가 가능합니다.";
+      WarningModal(message);
+    }
+  } else {
+    mainSection.innerHTML = emptyHtml();
+  }
+
+  // 삭제 버튼 클릭시 이벤트
+  removeEvent();
+};
+
+const initRender = () => {
+  // 마지막에 추가된 데이터 삭제
+  getIngred.splice(-1, 1);
+  localStorage.setItem("ingredient", JSON.stringify(getIngred));
+
+  // 데이터 반영
+  mainSection.innerHTML = "";
+  getIngred.forEach((ingredData) => {
+    mainSection.innerHTML += ingredHtml(ingredData);
+  });
+};
+
+// 초기값 렌더링
+renderHtml();
 
 const closeModal = () => {
   addModal.classList.remove("on");

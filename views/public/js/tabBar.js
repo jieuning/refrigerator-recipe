@@ -1,5 +1,4 @@
 export const PublicTabBar = (container) => {
-  console.log(container);
   const createNavElement = document.createElement("nav");
   createNavElement.className = "tab_bar";
 
