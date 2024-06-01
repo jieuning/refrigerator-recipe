@@ -4,6 +4,25 @@
   position: relative;
 }
 
+.main_header {
+  position: relative;
+}
+
+/* 전체 삭제 버튼 */
+.all_remove_btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 20px;
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.all_remove_btn.on {
+  color: #58b93f;
+}
+
 /* 재료 추가 모달 */
 .shadow {
   display: none;
@@ -176,6 +195,7 @@
   padding: 30px;
   text-align: center;
   word-break: keep-all;
+  border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fff;
   z-index: 30;
@@ -189,4 +209,23 @@
   border-radius: 4px;
   color: #fff;
   background-color: #58b93f;
+}
+
+/* 맞춤 레시피 버튼 */
+.costomized_btn {
+  display: none;
+  position: fixed;
+  left: 50%;
+  bottom: 96.5px;
+  transform: translateX(-50%);
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #58b93f;
+}
+
+.costomized_btn.on {
+  display: block;
 }

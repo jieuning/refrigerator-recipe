@@ -1,10 +1,9 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
 import { WarningModal } from "../public/js/modal.js";
 
-const container = document.querySelector("#container");
-
 // 공용 탭바 렌더링
 const tabBarRender = () => {
+  const container = document.querySelector("#container");
   return PublicTabBar(container);
 };
 tabBarRender();
@@ -50,6 +49,9 @@ let getIngred = JSON.parse(localStorage.getItem("ingredient")) || [];
 // };
 // fetchData();
 const mainSection = document.querySelector(".main");
+const allRemoveBtn = document.querySelector(".all_remove_btn");
+const costomizedBtn = document.querySelector(".costomized_btn");
+
 const emptyHtml = () => {
   return `
           <div class="empty_wrap">
@@ -102,6 +104,7 @@ const clickSubmitBtn = () => {
     // 디데이
     let expirDate = new Date(expirInput.value);
     const dDay = expirDday(expirDate);
+    console.log(dDay);
 
     // 데이터 로컬에 저장
     getIngred.push({
@@ -109,18 +112,35 @@ const clickSubmitBtn = () => {
       dday: dDay,
     });
 
-    if (!ingredInclude) {
+    // 전체삭제 활성화
+    if (getIngred.length !== 0) {
+      allRemoveBtn.classList.add("on");
+      costomizedBtn.classList.add("on");
+    }
+
+    if (dDay > -1) {
+      message = "이미 지난 일자와 오늘 일자는 선택할 수 없습니다.";
+      WarningModal(message);
+
+      // 조건에 걸리는 마지막 데이터 제외하고 렌더링
+      initRender();
+      return;
+    }
+
+    if (ingredInclude) {
+      message = "이미 추가된 재료입니다.";
+      WarningModal(message);
+
+      initRender();
+      return;
+    }
+
+    if (!ingredInclude || dDay < 0) {
       // 재료 추가시 렌더링
       renderHtml();
 
       // 로컬 업데이트
       localStorage.setItem("ingredient", JSON.stringify(getIngred));
-    } else {
-      // 조건에 걸리는 마지막 데이터 제외하고 렌더링
-      initRender();
-
-      message = "이미 추가된 재료입니다.";
-      WarningModal(message);
     }
   } else {
     message = "냉장고 재료 및 날짜를 모두 입력해주세요.";
@@ -143,7 +163,10 @@ const ingredHtml = (ingred) => {
 const expirDday = (expirDate) => {
   // 디데이 계산
   let diff = today.getTime() - expirDate.getTime();
-  diff = Math.ceil(diff / 1000 / 60 / 60 / 24);
+  diff = Math.ceil(diff / 1000 / 60 / 60 / 24) - 1;
+
+  console.log(diff);
+
   return diff;
 };
 
@@ -162,6 +185,12 @@ const clickDeleteIngred = (name) => {
   getIngred = getIngred.filter((ingred) => ingred.ingredient !== name);
   localStorage.setItem("ingredient", JSON.stringify(getIngred));
 
+  // 전체삭제 비활성화
+  if (getIngred.length === 0) {
+    allRemoveBtn.classList.remove("on");
+    costomizedBtn.classList.remove("on");
+  }
+
   // 이전 렌더링 초기화 후 삭제된 데이터로 다시 렌더링
   mainSection.innerHTML = "";
   renderHtml();
@@ -175,9 +204,6 @@ const renderHtml = () => {
     ingredInput.value = "";
 
     if (getIngred.length > 10) {
-      // 조건에 걸리는 마지막 데이터 제외하고 렌더링
-      initRender();
-
       message = "총 10개까지만 추가가 가능합니다.";
       WarningModal(message);
     }
@@ -203,6 +229,22 @@ const initRender = () => {
 
 // 초기값 렌더링
 renderHtml();
+
+if (getIngred.length !== 0) {
+  allRemoveBtn.classList.add("on");
+  costomizedBtn.classList.add("on");
+} else {
+  allRemoveBtn.classList.remove("on");
+  costomizedBtn.classList.remove("on");
+}
+
+// 모든 재료 일괄 삭제
+allRemoveBtn.addEventListener("click", () => {
+  if (getIngred.length !== 0) {
+    localStorage.removeItem("ingredient");
+    mainSection.innerHTML = emptyHtml();
+  }
+});
 
 const closeModal = () => {
   addModal.classList.remove("on");
