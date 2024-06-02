@@ -11,10 +11,6 @@ tabBarRender();
 let getIngred = JSON.parse(localStorage.getItem("ingredient")) || [];
 
 // const fetchData = async () => {
-//   // 현재 페이지의 쿼리 파라미터 값 가져오기
-//   const pageUrl = new URL(window.location.href.replace(/#/g, ""));
-//   const pageParams = new URLSearchParams(pageUrl.search).get("id");
-
 //   const API_KEY =
 //     "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
 //   const basicUrl = new URL(
@@ -241,8 +237,12 @@ if (getIngred.length !== 0) {
 // 모든 재료 일괄 삭제
 allRemoveBtn.addEventListener("click", () => {
   if (getIngred.length !== 0) {
+    getIngred = [];
     localStorage.removeItem("ingredient");
     mainSection.innerHTML = emptyHtml();
+
+    allRemoveBtn.classList.remove("on");
+    costomizedBtn.classList.remove("on");
   }
 });
 
