@@ -1,1 +1,19 @@
 @charset 'utf-8';
+
+.customized_item ul {
+  padding: 20px 0 92.5px 0;
+}
+
+.prev_btn {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(../../image/prev_arrow.png);
+  cursor: pointer;
+}

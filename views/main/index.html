@@ -14,15 +14,15 @@
     <div id="container" class="main_container">
         <div class="shadow"></div>
         <header>
-            <div class="main_header">
-                <h1 class="header_title">추천 레시피</h1>
+            <div class="header_wrap">
+                <h1 class="header_title">맞춤 레시피</h1>
                 <sapn class="all_remove_btn">전체 삭제</sapn>
             </div>
         </header>
         <section class="main"></section>
-        <button class="costomized_btn">
-            <a href="http://127.0.0.1:5500/views/customized/index.html#">맞춤 레시피 보기</a>
-        </button>
+        <a href="http://127.0.0.1:5500/views/customized/index.html#">
+            <button class="costomized_btn">맞춤 레시피 보기</button>
+        </a>
         <button class="open_modal_btn"></button>
     </div>
     <div class="add_modal">
@@ -36,6 +36,7 @@
             <label for="food">
                 <h2>유통 기한</h2>
                 <input type="date" name="date" id="expiration_date">
+                <p class="alarm_message">*유통기한 기준일은 현재 일자입니다.</p>
             </label>
             <button class="submit_btn" type="submit">재료 추가하기</button>
         </div>

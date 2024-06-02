@@ -10,6 +10,7 @@ tabBarRender();
 const levelArr = ["초보환영", "보통", "어려움"];
 const itemFilters = document.querySelectorAll(".recipe_filter span");
 let currentTarget = itemFilters[0];
+let page = 1;
 
 const fetchData = async () => {
   const API_KEY =
@@ -166,15 +167,11 @@ const clickBookmarkBtn = (i, bookmarks, data, bookmarkId) => {
   }
 };
 
-const bookmarkState = async (itemLink) => {
+const bookmarkState = (itemLink) => {
   const storageKeys = Object.keys(localStorage);
 
   if (storageKeys.length > 0) {
-    const bookmarkKeys = storageKeys.filter((key) =>
-      key.startsWith("bookmark-")
-    );
-
-    bookmarkKeys.forEach((key) => {
+    storageKeys.forEach((key) => {
       const keyId = key.slice(9).trim();
 
       // itemLink 중 해당 ID와 일치하는 항목 필터링
@@ -188,7 +185,7 @@ const bookmarkState = async (itemLink) => {
 
       if (clickedItems.length > 0) {
         clickedItems.forEach((item) => {
-          // 북마크 클래스를 추가하여 상태를 유지
+          // on 클래스를 추가하여 상태를 유지
           const bookmark = item
             .closest(".item_list")
             .querySelector(".bookmark");
@@ -206,8 +203,8 @@ const addBookmarkListeners = (data) => {
   for (let i = 0; i < bookmarks.length; i++) {
     bookmarks[i].addEventListener("click", () => {
       let bookmarkId = bookmarks[i].getAttribute("data-id");
-      console.log(bookmarkId);
-      clickBookmarkBtn(i, bookmarks, data, bookmarkId); // 필터링된 데이터 전달
+      // 필터링된 데이터 전달
+      clickBookmarkBtn(i, bookmarks, data, bookmarkId);
     });
   }
 

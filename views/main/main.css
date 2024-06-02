@@ -4,25 +4,6 @@
   position: relative;
 }
 
-.main_header {
-  position: relative;
-}
-
-/* 전체 삭제 버튼 */
-.all_remove_btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin-right: 20px;
-  font-size: 14px;
-  color: #ccc;
-  cursor: pointer;
-}
-
-.all_remove_btn.on {
-  color: #58b93f;
-}
-
 /* 재료 추가 모달 */
 .shadow {
   display: none;
@@ -222,10 +203,14 @@
   border: none;
   border-radius: 4px;
   font-weight: 600;
-  color: #fff;
   background-color: #58b93f;
 }
 
 .costomized_btn.on {
   display: block;
+}
+
+.alarm_message {
+  font-size: 14px;
+  margin-top: 5px;
 }

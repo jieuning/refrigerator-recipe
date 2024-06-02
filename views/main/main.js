@@ -10,40 +10,6 @@ tabBarRender();
 
 let getIngred = JSON.parse(localStorage.getItem("ingredient")) || [];
 
-// const fetchData = async () => {
-//   const API_KEY =
-//     "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
-//   const basicUrl = new URL(
-//     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1?RECIPE_ID=${pageParams}`
-//   );
-//   const recipeUrl = new URL(
-//     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000228_1?RECIPE_ID=${pageParams}`
-//   );
-//   const ingredUrl = new URL(
-//     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000227_1?RECIPE_ID=${pageParams}`
-//   );
-
-//   try {
-//     const basicRes = fetch(basicUrl);
-//     const recipeRes = fetch(recipeUrl);
-//     const ingredRes = fetch(ingredUrl);
-
-//     // 병렬처리, json 파싱
-//     const allRes = await Promise.all([basicRes, recipeRes, ingredRes]);
-//     const [basicResult, recipeResult, ingredResult] = await Promise.all(
-//       allRes.map((res) => res.json())
-//     );
-
-//     // 사용할 데이터
-//     const basicData = basicResult.Grid_20150827000000000226_1.row;
-//     const recipeData = recipeResult.Grid_20150827000000000228_1.row;
-//     const ingredData = ingredResult.Grid_20150827000000000227_1.row;
-//     console.log(basicData);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-// fetchData();
 const mainSection = document.querySelector(".main");
 const allRemoveBtn = document.querySelector(".all_remove_btn");
 const costomizedBtn = document.querySelector(".costomized_btn");
@@ -100,7 +66,6 @@ const clickSubmitBtn = () => {
     // 디데이
     let expirDate = new Date(expirInput.value);
     const dDay = expirDday(expirDate);
-    console.log(dDay);
 
     // 데이터 로컬에 저장
     getIngred.push({
@@ -115,7 +80,7 @@ const clickSubmitBtn = () => {
     }
 
     if (dDay > -1) {
-      message = "이미 지난 일자와 오늘 일자는 선택할 수 없습니다.";
+      message = "이미 지난 일자는 선택할 수 없습니다.";
       WarningModal(message);
 
       // 조건에 걸리는 마지막 데이터 제외하고 렌더링
@@ -139,7 +104,7 @@ const clickSubmitBtn = () => {
       localStorage.setItem("ingredient", JSON.stringify(getIngred));
     }
   } else {
-    message = "냉장고 재료 및 날짜를 모두 입력해주세요.";
+    message = "냉장고 재료 및 유통기한을 모두 입력해주세요.";
     WarningModal(message);
   }
 };

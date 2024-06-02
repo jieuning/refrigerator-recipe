@@ -8,6 +8,6 @@
 .all_bookmark {
   max-width: 760px;
   height: 100%;
-  margin: 20px 0;
+  margin: 20px auto;
   padding: 0 20px 92.5px 20px;
 }

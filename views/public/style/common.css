@@ -152,7 +152,8 @@ button {
   cursor: pointer;
 }
 
-/* public */
+/* ----- 공용 스타일 ----- */
+/* 헤더 */
 header {
   width: 100%;
   padding: 30px 0;
@@ -160,12 +161,31 @@ header {
   border-bottom: 1px solid #e1e1e1;
 }
 
-.recipe {
-  height: 100%;
+.header_wrap {
+  position: relative;
+}
+
+/* 전체 삭제 버튼 */
+.all_remove_btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 20px;
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.all_remove_btn.on {
+  color: #58b93f;
 }
 
 #container {
   margin-bottom: 72.5px;
+}
+
+.recipe {
+  height: 100%;
 }
 
 /* tab bar */
@@ -198,6 +218,17 @@ header {
 }
 
 /* 아이템 */
+.item {
+  max-width: 760px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px 92.5px 20px;
+}
+
+.lists_top {
+  margin-top: 20px;
+}
+
 .item_lists {
   display: flex;
   flex-wrap: wrap;
