@@ -212,9 +212,13 @@ header {
   align-items: center;
 }
 
+.tab a svg path.on {
+  fill: #58b93f;
+}
+
 .tab_title {
   margin-top: 3px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 /* 아이템 */

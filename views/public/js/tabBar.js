@@ -6,9 +6,8 @@ export const PublicTabBar = (container) => {
         <div class="tab_bar_wrap">
             <div class="tab">
                 <a href="http://127.0.0.1:5500/views/main/index.html#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
-                        <path fill="#e1e1e1" stroke="#e1e1e1" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.6rem" height="1.6rem" viewBox="0 0 24 24">
+                        <path fill="#e1e1e1" stroke-linecap="round" stroke-linejoin="round"
                             d="M20 19v-8.5a1 1 0 0 0-.4-.8l-7-5.25a1 1 0 0 0-1.2 0l-7 5.25a1 1 0 0 0-.4.8V19a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1" />
                     </svg>
                     <h1 class="tab_title">홈</h1>
@@ -16,21 +15,16 @@ export const PublicTabBar = (container) => {
             </div>
             <div class="tab">
                 <a href="http://127.0.0.1:5500/views/recipe/index.html#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
-                        <g fill="none">
-                            <path
-                                d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
-                            <path fill="#e1e1e1"
-                                d="M10.92 2.868a1.25 1.25 0 0 1 2.16 0l2.795 4.798l5.428 1.176a1.25 1.25 0 0 1 .667 2.054l-3.7 4.141l.56 5.525a1.25 1.25 0 0 1-1.748 1.27L12 19.592l-5.082 2.24a1.25 1.25 0 0 1-1.748-1.27l.56-5.525l-3.7-4.14a1.25 1.25 0 0 1 .667-2.055l5.428-1.176z" />
-                        </g>
-                    </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512">
+                    <path fill="#e1e1e1" d="M256 38.013c-22.458 0-66.472 110.3-84.64 123.502c-18.17 13.2-136.674 20.975-143.614 42.334c-6.94 21.358 84.362 97.303 91.302 118.662s-22.286 136.465-4.116 149.665S233.542 422.012 256 422.012s122.9 63.365 141.068 50.164c18.17-13.2-11.056-128.306-4.116-149.665c6.94-21.36 98.242-97.304 91.302-118.663c-6.94-21.36-125.444-29.134-143.613-42.335c-18.168-13.2-62.182-123.502-84.64-123.502z"/>
+                </svg>
                     <h1 class="tab_title">레시피</h1>
                 </a>
             </div>
             <div class="tab">
                 <a href="http://127.0.0.1:5500/views/bookmark/index.html#">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24">
-                        <path fill="#e1e1e1" d="M17 3H7a2 2 0 0 0-2 2v16l7-3l7 3V5a2 2 0 0 0-2-2" />
+                        <path fill="#e1e1e1" stroke-linecap="round" stroke-linejoin="round" d="M17 3H7a2 2 0 0 0-2 2v16l7-3l7 3V5a2 2 0 0 0-2-2" />
                     </svg>
                     <h1 class="tab_title">북마크</h1>
                 </a>
@@ -39,4 +33,34 @@ export const PublicTabBar = (container) => {
     `;
 
   container.append(createNavElement);
+
+  // 탭 활성화
+  const hex = "#e1e1e1";
+  const activeHex = "#58b93f";
+  const tabs = document.querySelectorAll(".tab a");
+  let tabPath = tabs[0].children[0].children[0];
+  tabPath.setAttribute("fill", activeHex);
+
+  tabs.forEach((tab) => {
+    console.log(tab);
+    tab.addEventListener("click", (e) => handleTabClick(e, tab));
+  });
+
+  const handleTabClick = (event, tab) => {
+    event.preventDefault();
+    const target = tab;
+
+    console.log(tabPath);
+    tabPath.setAttribute("fill", hex);
+
+    tabPath = target.children[0].children[0];
+    tabPath.setAttribute("fill", activeHex);
+
+    const url = target.getAttribute("href");
+    // location.href = `${url}`;
+
+    setTimeout(() => {
+      location.href = `${url}`;
+    }, 100); // 짧은 지연 시간 추가
+  };
 };

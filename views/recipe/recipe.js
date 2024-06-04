@@ -10,13 +10,14 @@ tabBarRender();
 const levelArr = ["초보환영", "보통", "어려움"];
 const itemFilters = document.querySelectorAll(".recipe_filter span");
 let currentTarget = itemFilters[0];
-let page = 1;
+let currentPage = 1;
+const maxPage = 10;
 
-const fetchData = async () => {
+const fetchData = async (page = 1) => {
   const API_KEY =
     "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
   const url = new URL(
-    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1/1/10`
+    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1/1/${page}0`
   );
 
   try {
@@ -46,14 +47,15 @@ const fetchData = async () => {
 
     // 초기값에 적용될 북마크
     bookmarkState(itemLink);
+
+    // 무한 스크롤 옵저버 설정
+    setObserver();
   } catch (error) {
     console.log(error.message);
   }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  fetchData();
-});
+fetchData();
 
 const recipeCardHtml = (data) => {
   return `
@@ -210,4 +212,43 @@ const addBookmarkListeners = (data) => {
 
   // 정렬된 데이터 마다 북마크 적용
   bookmarkState(itemLink);
+};
+
+const handleIntersect = (entries, observer) => {
+  setTimeout(() => {
+    console.log("시작!!");
+    console.log(observer);
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // 관찰 해제
+        observer.unobserve(entry.target);
+
+        if (currentPage < maxPage) {
+          // 페이지가 렌더링이 되기도 전에 감지해서
+          currentPage++;
+          fetchData(currentPage);
+          console.log(entries);
+        } else {
+          observer.disconnect();
+        }
+      }
+    });
+  }, 800);
+};
+
+const setObserver = () => {
+  const options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 1.0,
+    delay: 1,
+  };
+
+  const observer = new IntersectionObserver(handleIntersect, options);
+  const target = document.querySelector("#target");
+  console.log(target);
+
+  if (target) {
+    observer.observe(target);
+  }
 };

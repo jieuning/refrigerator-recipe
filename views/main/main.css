@@ -202,7 +202,9 @@
   padding: 12px 30px;
   border: none;
   border-radius: 4px;
+  font-size: 16px;
   font-weight: 600;
+  color: #fff;
   background-color: #58b93f;
 }
 

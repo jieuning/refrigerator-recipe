@@ -43,3 +43,8 @@
   color: #fff;
   background-color: #58b93f;
 }
+
+#target {
+  width: 100%;
+  height: 1px;
+}
