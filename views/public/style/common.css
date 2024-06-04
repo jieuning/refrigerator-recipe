@@ -212,6 +212,10 @@ header {
   align-items: center;
 }
 
+.tab a.on {
+  display: none;
+}
+
 .tab a svg path.on {
   fill: #58b93f;
 }

@@ -7,6 +7,18 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
+document.addEventListener("DOMContentLoaded", () => {
+  const currentUrl = window.location.href;
+  const tabs = document.querySelector(".tab a");
+
+  Array.from(tabs).forEach((tab) => {
+    console.log(tab);
+    if (currentUrl.includes(tab.getAttribute("href"))) {
+      tab.classList.add("on");
+    }
+  });
+});
+
 const detailFetchData = async () => {
   // 현재 페이지의 쿼리 파라미터 값 가져오기
   const pageUrl = new URL(window.location.href.replace(/#/g, ""));

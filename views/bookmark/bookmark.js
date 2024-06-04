@@ -14,7 +14,7 @@ const bookmarkData = () => {
 
   // 로컬스토리지에서 ingredient 제외
   const ingredientRemove = storageKeys.filter(
-    (string) => string !== "ingredient"
+    (string) => string !== "ingredient" && string !== "pageId"
   );
 
   ingredientRemove.forEach((key) => {

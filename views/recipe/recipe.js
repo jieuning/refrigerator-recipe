@@ -7,6 +7,18 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
+document.addEventListener("DOMContentLoaded", () => {
+  const currentUrl = window.location.href;
+  const tabs = document.querySelector(".tab a");
+
+  Array.from(tabs).forEach((tab) => {
+    console.log(tab);
+    if (currentUrl.includes(tab.getAttribute("href"))) {
+      tab.classList.add("on");
+    }
+  });
+});
+
 const levelArr = ["초보환영", "보통", "어려움"];
 const itemFilters = document.querySelectorAll(".recipe_filter span");
 let currentTarget = itemFilters[0];
@@ -216,8 +228,6 @@ const addBookmarkListeners = (data) => {
 
 const handleIntersect = (entries, observer) => {
   setTimeout(() => {
-    console.log("시작!!");
-    console.log(observer);
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         // 관찰 해제
@@ -227,7 +237,6 @@ const handleIntersect = (entries, observer) => {
           // 페이지가 렌더링이 되기도 전에 감지해서
           currentPage++;
           fetchData(currentPage);
-          console.log(entries);
         } else {
           observer.disconnect();
         }
@@ -246,8 +255,6 @@ const setObserver = () => {
 
   const observer = new IntersectionObserver(handleIntersect, options);
   const target = document.querySelector("#target");
-  console.log(target);
-
   if (target) {
     observer.observe(target);
   }
