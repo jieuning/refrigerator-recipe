@@ -12,11 +12,12 @@ let activeData = [];
 const bookmarkData = () => {
   const storageKeys = Object.keys(localStorage);
 
-  // 로컬스토리지에서 ingredient 제외
+  // 로컬스토리지에서 ingredient, pageId 제외
   const ingredientRemove = storageKeys.filter(
     (string) => string !== "ingredient" && string !== "pageId"
   );
 
+  console.log(ingredientRemove);
   ingredientRemove.forEach((key) => {
     const localData = JSON.parse(localStorage.getItem(`${key}`));
     activeData.push(localData[0]);
@@ -68,7 +69,7 @@ const clickBookmarkBtn = (bookmarkId) => {
 
   // 로컬스토리지에서 ingredient 제외
   const ingredientRemove = storageKeys.filter(
-    (string) => string !== "ingredient"
+    (string) => string !== "ingredient" && string !== "pageId"
   );
 
   ingredientRemove.forEach((key) => {
@@ -80,6 +81,7 @@ const clickBookmarkBtn = (bookmarkId) => {
 };
 
 const bookmarkCardHtml = (data) => {
+  console.log(data);
   return `
             <li class="item_list">
                 <div class="img_wrap">

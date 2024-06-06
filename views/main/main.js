@@ -37,12 +37,73 @@ if (getIngred.length === 0) {
 const openModalBtn = document.querySelector(".open_modal_btn");
 const addModal = document.querySelector(".add_modal");
 const shadow = document.querySelector(".shadow");
+const modalCloseBtn = document.querySelector(".modal_close");
+
+let startY, currentY, initHeight;
 
 const activeModal = () => {
   addModal.classList.add("on");
   shadow.classList.add("on");
+  addModal.style.height = "auto";
+  initHeight = addModal.offsetHeight;
 };
+
+const closeModal = () => {
+  addModal.classList.remove("on");
+  shadow.classList.remove("on");
+};
+
+const handleTouchStart = (event) => {
+  // event에 touches가 존재하지 않으면 드래그 막기
+  if (!event.touches) {
+    closeModal();
+    return;
+  }
+
+  startY = event.touches ? event.touches[0].clientY : event.clientY;
+  initHeight = addModal.offsetHeight;
+  addModal.style.transition = "none";
+};
+
+const handleTouchMove = (event) => {
+  currentY = event.touches ? event.touches[0].clientY : event.clientY;
+  const distance = currentY - startY;
+
+  // 위로 드래그 방지
+  if (distance < 0) return;
+
+  const newHeight = initHeight - distance;
+
+  if (newHeight > 50 && newHeight < window.innerHeight) {
+    addModal.style.height = `${newHeight}px`;
+  }
+};
+
+const handleTouchEnd = () => {
+  addModal.style.transition = "height 0.3s ease";
+
+  if (addModal.offsetHeight < initHeight / 2) {
+    closeModal();
+  } else {
+    addModal.style.height = "auto";
+  }
+};
+
 openModalBtn.addEventListener("click", () => activeModal());
+
+modalCloseBtn.addEventListener("touchstart", handleTouchStart);
+modalCloseBtn.addEventListener("touchmove", handleTouchMove);
+modalCloseBtn.addEventListener("touchend", handleTouchEnd);
+
+// 모바일이 아닐 땐 클릭으로 모달 닫기
+modalCloseBtn.addEventListener("click", (event) => {
+  if (!event.touches) {
+    closeModal();
+  }
+});
+
+// 만약을 대비해 그림자 배경을 클릭해도 모달이 닫히도록 설정
+shadow.addEventListener("click", closeModal);
 
 const submitBtn = document.querySelector(".submit_btn");
 const ingredInput = document.querySelector("#ingred_txt");
@@ -210,7 +271,3 @@ allRemoveBtn.addEventListener("click", () => {
     costomizedBtn.classList.remove("on");
   }
 });
-
-const closeModal = () => {
-  addModal.classList.remove("on");
-};

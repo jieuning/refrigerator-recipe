@@ -39,7 +39,6 @@ export const PublicTabBar = (container) => {
   // 페이지마다 Id값을 준다.
   // 페이지에 해당하는 탭을 클릭했을 때 로컬 스토리지에 id 값을 저장한다.
   // 클릭할 때마다 해당 id 값으로 바뀌도록 한다.
-  // 과연 유지가 될까?
   const handleTabClick = (tab) => {
     const tabAttr = new URL(tab.getAttribute("href").replace(/#/g, ""));
     const params = new URLSearchParams(tabAttr.search).get("pageId");
