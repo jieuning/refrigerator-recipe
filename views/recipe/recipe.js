@@ -1,4 +1,5 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
+import { API_KEY } from "../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -7,18 +8,6 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const currentUrl = window.location.href;
-  const tabs = document.querySelector(".tab a");
-
-  Array.from(tabs).forEach((tab) => {
-    console.log(tab);
-    if (currentUrl.includes(tab.getAttribute("href"))) {
-      tab.classList.add("on");
-    }
-  });
-});
-
 const levelArr = ["초보환영", "보통", "어려움"];
 const itemFilters = document.querySelectorAll(".recipe_filter span");
 let currentTarget = itemFilters[0];
@@ -26,8 +15,6 @@ let currentPage = 1;
 const maxPage = 10;
 
 const fetchData = async (page = 1) => {
-  const API_KEY =
-    "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
   const url = new URL(
     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1/1/${page}0`
   );
@@ -40,7 +27,6 @@ const fetchData = async (page = 1) => {
 
     const result = await res.json();
     const data = result.Grid_20150827000000000226_1.row;
-    console.log(data);
 
     // 낮은 난이도 순으로 정렬 초기값
     currentTarget.classList.add("on");
@@ -84,7 +70,7 @@ const recipeCardHtml = (data) => {
                 </div>
                 <div class="item_tags">
                     <span class="level">${data.LEVEL_NM}</span>
-                    <span class="cooking_time">${data.COOKING_TIME}</span>
+                    <span class="cooking_time">약 ${data.COOKING_TIME}</span>
                     <span class="bookmark" data-id=${data.RECIPE_ID}></span>
                 </div>
             </article>

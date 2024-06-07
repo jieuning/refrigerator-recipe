@@ -1,4 +1,5 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
+import { API_KEY } from "../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -7,25 +8,35 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const currentUrl = window.location.href;
-  const tabs = document.querySelector(".tab a");
+const bookmarkId = () => {
+  const storageKeys = Object.keys(localStorage);
 
-  Array.from(tabs).forEach((tab) => {
-    console.log(tab);
-    if (currentUrl.includes(tab.getAttribute("href"))) {
-      tab.classList.add("on");
-    }
+  // 로컬스토리지에서 ingredient, pageId 제외
+  const ingredientRemove = storageKeys.filter(
+    (string) => string !== "ingredient" && string !== "pageId"
+  );
+
+  let currentBookmarkId = [];
+  ingredientRemove.forEach((bookmark) => {
+    // slice한 id가 1의 자리일 때 공백 제거 위해 trim사용
+    const bookmarkId = bookmark.slice(9).trim();
+    currentBookmarkId.push(bookmarkId);
   });
-});
+
+  return currentBookmarkId;
+};
+
+// 현재 페이지의 쿼리 파라미터 값 가져오기
+const pageUrl = new URL(window.location.href.replace(/#/g, ""));
+const pageParams = new URLSearchParams(pageUrl.search).get("id");
+
+// 로컬스토지지에 저장된 key값 이름에 페이지 params가 포함되는지 조건 정의
+// 이로써 디테일 페이지 북마크의 버튼을 두번 클릭해야 하는 문제 해결
+let bool;
+const localBookmark = bookmarkId();
+localBookmark.includes(pageParams) ? (bool = false) : (bool = true);
 
 const detailFetchData = async () => {
-  // 현재 페이지의 쿼리 파라미터 값 가져오기
-  const pageUrl = new URL(window.location.href.replace(/#/g, ""));
-  const pageParams = new URLSearchParams(pageUrl.search).get("id");
-
-  const API_KEY =
-    "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
   const basicUrl = new URL(
     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1?RECIPE_ID=${pageParams}`
   );
@@ -52,7 +63,6 @@ const detailFetchData = async () => {
     const recipeData = recipeResult.Grid_20150827000000000228_1.row;
     const ingredData = ingredResult.Grid_20150827000000000227_1.row;
 
-    console.log(basicData[0], recipeData, ingredData);
     baseHtmlRender(basicData, ingredData, recipeData);
     ingredData.forEach((data) => {
       if (data.IRDNT_TY_NM === "주재료") {
@@ -63,15 +73,28 @@ const detailFetchData = async () => {
         ingredHtmlRender(data, "source");
       }
     });
+
+    const bookmarkSvg = document.querySelector(".detail_bookmark svg");
+    const currentBookmarkId = bookmarkId();
+
+    currentBookmarkId.forEach((bookmarkId) => {
+      if (bookmarkId === pageParams) {
+        bookmarkSvg.children[0].setAttribute("fill", "#58B93F");
+      }
+    });
+
+    bookmarkSvg.addEventListener("click", () =>
+      handleClickBookmark(pageParams, basicData, bookmarkSvg)
+    );
   } catch (error) {
     console.log(error.message);
   }
 };
 detailFetchData();
 
-const detailContainer = document.querySelector(".detail_contaienr");
+const detailWrap = document.querySelector(".detail_wrap");
 const baseHtmlRender = (basicData, ingredData, recipeData) => {
-  detailContainer.innerHTML = `
+  detailWrap.innerHTML = `
         <section class="detail_img">
             <nav class="prev_nav">
                 <div class="prev_btn">
@@ -95,11 +118,11 @@ const baseHtmlRender = (basicData, ingredData, recipeData) => {
                     <h1 class="title">${basicData[0].RECIPE_NM_KO}</h1>
                     <p class="summery_txt">${basicData[0].SUMRY}</p>
                 </div>
-                <div class="bookmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2.5rem" height="2.5rem" viewBox="0 0 384 512">
-                        <path fill="#e1e1e1"
-                            d="M0 48v439.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400l153.7 107.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48" />
-                    </svg>
+                <div class="detail_bookmark">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="2.5rem" height="2.5rem" viewBox="0 0 10 15">
+                  <path fill="#e1e1e1"
+                    d="M3.5 2a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .765.424L7.5 11.59l3.735 2.334A.5.5 0 0 0 12 13.5v-11a.5.5 0 0 0-.5-.5z"/>
+                 </svg>
                 </div>
             </div>
         </section>
@@ -130,7 +153,7 @@ const baseHtmlRender = (basicData, ingredData, recipeData) => {
             </div>
         </section>
         <section class="process detail_section">
-            <h2 class="title_txt">과정</h2>
+            <h2 class="title_txt">조리 과정</h2>
             <ul class="process_lists">
                 ${recipeData
                   .map(
@@ -150,6 +173,7 @@ const baseHtmlRender = (basicData, ingredData, recipeData) => {
 const ingredHtmlRender = (data, type) => {
   let wrap;
 
+  // 주재료, 부재료, 양념 데이터가 존재할 때 dl 안에 dt 추가
   if (type === "main") {
     wrap = document.querySelector(".main_ingred dl");
   } else if (type === "sub") {
@@ -159,4 +183,45 @@ const ingredHtmlRender = (data, type) => {
   }
 
   wrap.innerHTML += `<dt>${data.IRDNT_NM} ${data.IRDNT_CPCTY}</dt>`;
+};
+
+const handleClickBookmark = (id, data, bookmarkSvg) => {
+  // 클릭된 api 데이터의 레시피 id 값과 클릭한 리스트의 레시피 아이디 값이 같은 데이터 필터
+  const filteredItem = data.filter((item) => item.RECIPE_ID == id);
+
+  // 사용할 데이터만 추출
+  const usingData = [
+    {
+      CALORIE: filteredItem[0].CALORIE,
+      COOKING_TIME: filteredItem[0].COOKING_TIME,
+      LEVEL_NM: filteredItem[0].LEVEL_NM,
+      QNT: filteredItem[0].QNT,
+      RECIPE_ID: filteredItem[0].RECIPE_ID,
+      RECIPE_NM_KO: filteredItem[0].RECIPE_NM_KO,
+      SUMRY: filteredItem[0].SUMRY,
+    },
+  ];
+
+  if (!bool) {
+    clickRemoveBookmark(id, bookmarkSvg);
+  } else {
+    clickAddBookmark(id, usingData, bookmarkSvg);
+  }
+
+  // 논리값 반전 -> 토글 목적
+  bool = !bool;
+};
+
+const clickRemoveBookmark = (id, bookmarkSvg) => {
+  // 북마크 아이콘 클릭시 북마크 리스트에서 제거
+  localStorage.removeItem(`bookmark-${id}`);
+  bookmarkSvg.children[0].setAttribute("fill", "#e1e1e1");
+};
+
+const clickAddBookmark = (id, usingData, bookmarkSvg) => {
+  bookmarkSvg.children[0].setAttribute("fill", "#58B93F");
+  // 추가
+  localStorage.getItem(`bookmark-${id}`);
+  // 업데이트
+  localStorage.setItem(`bookmark-${id}`, JSON.stringify(usingData));
 };

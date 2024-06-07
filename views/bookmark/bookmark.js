@@ -8,16 +8,14 @@ const tabBarRender = () => {
 tabBarRender();
 
 let activeData = [];
+const storageKeys = Object.keys(localStorage);
 
 const bookmarkData = () => {
-  const storageKeys = Object.keys(localStorage);
-
   // 로컬스토리지에서 ingredient, pageId 제외
   const ingredientRemove = storageKeys.filter(
     (string) => string !== "ingredient" && string !== "pageId"
   );
 
-  console.log(ingredientRemove);
   ingredientRemove.forEach((key) => {
     const localData = JSON.parse(localStorage.getItem(`${key}`));
     activeData.push(localData[0]);
@@ -81,7 +79,6 @@ const clickBookmarkBtn = (bookmarkId) => {
 };
 
 const bookmarkCardHtml = (data) => {
-  console.log(data);
   return `
             <li class="item_list">
                 <div class="img_wrap">
@@ -96,12 +93,13 @@ const bookmarkCardHtml = (data) => {
                     </div>
                     <div class="item_tags">
                         <span class="level">${data.LEVEL_NM}</span>
-                        <span class="cooking_time">${data.COOKING_TIME}</span>
+                        <span class="cooking_time">약 ${
+                          data.COOKING_TIME
+                        }</span>
                         <span class="bookmark" data-id=${data.RECIPE_ID}></span>
                     </div>
                 </article>
             </li>
         `;
 };
-
 bookmarkData();

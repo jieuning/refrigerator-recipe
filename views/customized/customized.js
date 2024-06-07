@@ -1,4 +1,5 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
+import { API_KEY } from "../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -7,9 +8,8 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
-const API_KEY =
-  "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
 const fetchIngredData = async (ingredients) => {
+  // 특정 재료 데이터의 id 값을 얻기 위해 불러옴
   const ingredRes = await fetch(
     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000227_1?IRDNT_NM=${ingredients}`
   );
@@ -26,6 +26,7 @@ const fetchIngredAllData = async (ingredients) => {
 };
 
 const fetchBaseData = async (id) => {
+  // 재료 데이터의 id 값을 통해 base데이터를 가져온다.
   const baseRes = await fetch(
     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1?RECIPE_ID=${id}`
   );
@@ -52,6 +53,7 @@ const getRecipeData = async () => {
 
     // 재료의 id를 얻기 위한 fetch 데이터
     const ingredResult = await fetchIngredAllData(ingredients);
+    console.log(ingredResult);
 
     if (ingredResult !== undefined) {
       // 중복 없애기 위해 set사용
@@ -128,7 +130,7 @@ const recipeCardHtml = (data) => {
                   </div>
                   <div class="item_tags">
                       <span class="level">${data.LEVEL_NM}</span>
-                      <span class="cooking_time">${data.COOKING_TIME}</span>
+                      <span class="cooking_time">약 ${data.COOKING_TIME}</span>
                       <span class="bookmark" data-id=${data.RECIPE_ID}></span>
                   </div>
               </article>
@@ -176,7 +178,7 @@ const bookmarkState = (itemLink) => {
     storageKeys.forEach((key) => {
       const keyId = key.slice(9).trim();
 
-      // itemLink 중 해당 ID와 일치하는 항목 필터링
+      // itemLink 중 해당 id와 일치하는 항목 필터링
       const clickedItems = Array.from(itemLink).filter((link) => {
         const linkHref = link.getAttribute("href");
         const url = new URL(linkHref.replace(/#/g, ""));
