@@ -1,4 +1,5 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
+import { ItemCardHtml } from "../public/js/publicHtml.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -9,6 +10,16 @@ tabBarRender();
 
 let activeData = [];
 const storageKeys = Object.keys(localStorage);
+const bookmarkLists = document.querySelector(".item_lists");
+
+const emptyHtml = () => {
+  return `
+    <div class="empty_wrap">
+      <img class="empty_icon" src="../../image/egg_icon.png" />
+      <span class="empty_title">마음에 드는 레시피를<br/>지금 바로 추가해보세요.</span>
+    </div>
+  `;
+};
 
 const bookmarkData = () => {
   // 로컬스토리지에서 ingredient, pageId 제외
@@ -21,10 +32,21 @@ const bookmarkData = () => {
     activeData.push(localData[0]);
   });
 
-  markedItemRender(activeData);
-};
+  const allRemoveBtn = document.querySelector(".all_remove_btn");
 
-const bookmarkLists = document.querySelector(".item_lists");
+  if (activeData.length !== 0) {
+    allRemoveBtn.classList.add("on");
+  } else {
+    allRemoveBtn.classList.remove("on");
+  }
+
+  markedItemRender(activeData);
+
+  // 모든 재료 일괄 삭제
+  allRemoveBtn.addEventListener("click", () =>
+    allRemoveBookmark(ingredientRemove, activeData, allRemoveBtn)
+  );
+};
 
 const markedItemRender = (activeData) => {
   // 재렌더링시 초기화
@@ -32,15 +54,10 @@ const markedItemRender = (activeData) => {
 
   if (activeData.length !== 0) {
     activeData.forEach((data) => {
-      bookmarkLists.innerHTML += bookmarkCardHtml(data);
+      bookmarkLists.innerHTML += ItemCardHtml(data);
     });
   } else {
-    bookmarkLists.innerHTML = `
-        <div class="empty_wrap">
-            <img class="empty_icon" src="../../image/egg_icon.png" />
-            <span class="empty_title">마음에 드는 레시피를<br/>지금 바로 추가해보세요.</span>
-        </div>
-    `;
+    bookmarkLists.innerHTML = emptyHtml();
   }
 
   // 북마커가 삭제된 후에 새로운 activeData가 재렌더링되더라도
@@ -54,6 +71,17 @@ const markedItemRender = (activeData) => {
       clickBookmarkBtn(bookmarkId);
     });
   });
+};
+
+const allRemoveBookmark = (ingredientRemove, activeData, allRemoveBtn) => {
+  if (activeData.length !== 0) {
+    activeData = [];
+    ingredientRemove.forEach((key) => {
+      localStorage.removeItem(key);
+    });
+    bookmarkLists.innerHTML = emptyHtml();
+    allRemoveBtn.classList.remove("on");
+  }
 };
 
 const clickBookmarkBtn = (bookmarkId) => {
@@ -78,28 +106,4 @@ const clickBookmarkBtn = (bookmarkId) => {
   markedItemRender(activeData);
 };
 
-const bookmarkCardHtml = (data) => {
-  return `
-            <li class="item_list">
-                <div class="img_wrap">
-                    <a href=${`http://127.0.0.1:5500/views/detail/index.html#?id=${data.RECIPE_ID}`}>
-                        <img src="/image/fake_img.png"/>
-                    </a>
-                </div>
-                <article class="item_contents">
-                    <div class="title_wrap">
-                        <h2 class="item_title">${data.RECIPE_NM_KO}</h2>
-                        <p class="item_Summary">${data.SUMRY}</p>
-                    </div>
-                    <div class="item_tags">
-                        <span class="level">${data.LEVEL_NM}</span>
-                        <span class="cooking_time">약 ${
-                          data.COOKING_TIME
-                        }</span>
-                        <span class="bookmark" data-id=${data.RECIPE_ID}></span>
-                    </div>
-                </article>
-            </li>
-        `;
-};
 bookmarkData();

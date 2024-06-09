@@ -25,22 +25,24 @@
         </a>
         <button class="open_modal_btn"></button>
     </div>
-    <div class="add_modal">
-        <span class="modal_close"></span>
-        <h2 class="modal_title">재료 추가하기</h2>
-        <div class="add_input">
-            <label for="food">
-                <h2>냉장고 재료</h2>
-                <input type="text" name="food" id="ingred_txt" placeholder="냉장고 재료를 추가해주세요(하나만 가능)">
-            </label>
-            <label for="food">
-                <h2>유통 기한</h2>
-                <input type="date" name="date" id="expiration_date">
-                <p class="alarm_message">*유통기한 기준일은 현재 날짜 기준입니다.</p>
-            </label>
-            <button class="submit_btn" type="submit">재료 추가하기</button>
+    <nav class="add_modal">
+        <div class="add_modal_wrap">
+            <span class="modal_close"></span>
+            <h2 class="modal_title">재료 추가하기</h2>
+            <div class="add_input">
+                <label for="food">
+                    <h2>냉장고 재료</h2>
+                    <input type="text" name="food" id="ingred_txt" placeholder="냉장고 재료를 추가해주세요(하나만 가능)">
+                </label>
+                <label for="food">
+                    <h2>유통 기한</h2>
+                    <input type="date" name="date" id="expiration_date">
+                    <p class="alarm_message">*유통기한 기준일은 현재 날짜 기준입니다.</p>
+                </label>
+                <button class="submit_btn" type="submit">재료 추가하기</button>
+            </div>
         </div>
-    </div>
+    </nav>
 </body>
 
 </html>

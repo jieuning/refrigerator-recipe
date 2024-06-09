@@ -86,6 +86,11 @@ const detailFetchData = async () => {
     bookmarkSvg.addEventListener("click", () =>
       handleClickBookmark(pageParams, basicData, bookmarkSvg)
     );
+
+    const prevBtn = document.querySelector(".prev_btn");
+    prevBtn.addEventListener("click", () => {
+      history.go(-1);
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -104,7 +109,9 @@ const baseHtmlRender = (basicData, ingredData, recipeData) => {
                     </svg>
                 </div>
             </nav>
-            <img src="../../image/fake_img.png" />
+            <img src="../../image/recipe_${
+              basicData[0].RECIPE_ID <= 100 ? basicData[0].RECIPE_ID : "no"
+            }.jpeg" />
         </section>
         <section class="detail_top detail_section">
             <div class="detail_tag">

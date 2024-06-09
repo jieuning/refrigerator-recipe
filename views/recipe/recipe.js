@@ -1,4 +1,5 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
+import { ItemCardHtml } from "../public/js/publicHtml.js";
 import { API_KEY } from "../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
@@ -55,29 +56,6 @@ const fetchData = async (page = 1) => {
 
 fetchData();
 
-const recipeCardHtml = (data) => {
-  return `
-        <li class="item_list">
-            <div class="img_wrap">
-                <a href=${`http://127.0.0.1:5500/views/detail/index.html#?id=${data.RECIPE_ID}`}>
-                    <img src="/image/fake_img.png"/>
-                </a>
-            </div>                
-            <article class="item_contents">
-                <div class="title_wrap">
-                    <h2 class="item_title">${data.RECIPE_NM_KO}</h2>
-                    <p class="item_Summary">${data.SUMRY}</p>
-                </div>
-                <div class="item_tags">
-                    <span class="level">${data.LEVEL_NM}</span>
-                    <span class="cooking_time">약 ${data.COOKING_TIME}</span>
-                    <span class="bookmark" data-id=${data.RECIPE_ID}></span>
-                </div>
-            </article>
-        </li>
-    `;
-};
-
 const recipeLists = document.querySelector(".item_lists");
 
 const recipeListRender = (sortedData, target = currentTarget) => {
@@ -88,7 +66,7 @@ const recipeListRender = (sortedData, target = currentTarget) => {
   currentTarget = target;
 
   sortedData.forEach((data) => {
-    recipeLists.innerHTML += recipeCardHtml(data);
+    recipeLists.innerHTML += ItemCardHtml(data);
   });
 
   addBookmarkListeners(sortedData); // 필터링된 데이터 전달
@@ -236,7 +214,6 @@ const setObserver = () => {
     root: null,
     rootMargin: "0px",
     threshold: 1.0,
-    delay: 1,
   };
 
   const observer = new IntersectionObserver(handleIntersect, options);

@@ -1,4 +1,5 @@
 import { PublicTabBar } from "../public/js/tabBar.js";
+import { ItemCardHtml } from "../public/js/publicHtml.js";
 import { API_KEY } from "../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
@@ -53,7 +54,6 @@ const getRecipeData = async () => {
 
     // 재료의 id를 얻기 위한 fetch 데이터
     const ingredResult = await fetchIngredAllData(ingredients);
-    console.log(ingredResult);
 
     if (ingredResult !== undefined) {
       // 중복 없애기 위해 set사용
@@ -77,22 +77,31 @@ const getRecipeData = async () => {
       );
 
       const itemLists = document.querySelector(".item_lists");
-      baseData.forEach((data) => {
-        itemLists.innerHTML += recipeCardHtml(data);
-      });
-
-      const bookmarks = document.querySelectorAll(".bookmark");
-      const itemLink = document.querySelectorAll(".item_list .img_wrap a");
-
-      for (let i = 0; i < bookmarks.length; i++) {
-        bookmarks[i].addEventListener("click", () => {
-          let bookmarkId = bookmarks[i].getAttribute("data-id");
-          // 필터링된 데이터 전달
-          clickBookmarkBtn(i, bookmarks, baseData, bookmarkId);
+      if (baseData.length !== 0) {
+        baseData.forEach((data) => {
+          itemLists.innerHTML += ItemCardHtml(data);
         });
+
+        const bookmarks = document.querySelectorAll(".bookmark");
+        const itemLink = document.querySelectorAll(".img_wrap a");
+
+        for (let i = 0; i < bookmarks.length; i++) {
+          bookmarks[i].addEventListener("click", () => {
+            let bookmarkId = bookmarks[i].getAttribute("data-id");
+            // 필터링된 데이터 전달
+            clickBookmarkBtn(i, bookmarks, baseData, bookmarkId);
+          });
+        }
+
+        bookmarkState(itemLink);
+      } else {
+        itemLists.innerHTML = emptyHtml();
       }
 
-      bookmarkState(itemLink);
+      const prevBtn = document.querySelector(".prev_btn");
+      prevBtn.addEventListener("click", () => {
+        history.go(-1);
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -105,37 +114,14 @@ const emptyHtml = () => {
             <div class="empty_wrap">
               <img
                 class="empty_icon"
-                src="../../image/ refrigerator_icon.png"
-                alt="냉장고 아이콘"
+                src="../../image/no_customized.png"
+                alt="포크랑 숫가락 아이콘"
               />
               <span class="empty_title">
-                냉장고에 있는 재료를 추가하시면
-                <br /> 맞춤 레시피를 추천해드려요.
+                해당 재료에 대한 레시피가
+                <br /> 존재하지 않습니다.
               </span>
             </div>`;
-};
-
-const recipeCardHtml = (data) => {
-  return `
-          <li class="item_list">
-              <div class="img_wrap">
-                  <a href=${`http://127.0.0.1:5500/views/detail/index.html#?id=${data.RECIPE_ID}`}>
-                      <img src="/image/fake_img.png"/>
-                  </a>
-              </div>                
-              <article class="item_contents">
-                  <div class="title_wrap">
-                      <h2 class="item_title">${data.RECIPE_NM_KO}</h2>
-                      <p class="item_Summary">${data.SUMRY}</p>
-                  </div>
-                  <div class="item_tags">
-                      <span class="level">${data.LEVEL_NM}</span>
-                      <span class="cooking_time">약 ${data.COOKING_TIME}</span>
-                      <span class="bookmark" data-id=${data.RECIPE_ID}></span>
-                  </div>
-              </article>
-          </li>
-      `;
 };
 
 const clickBookmarkBtn = (i, bookmarks, data, bookmarkId) => {
