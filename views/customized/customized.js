@@ -1,6 +1,5 @@
 import { PublicTabBar } from "../../public/js/tabBar.js";
 import { ItemCardHtml } from "../../public/js/publicHtml.js";
-import { API_KEY } from "../../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -9,6 +8,8 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
+const API_KEY =
+  "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
 const fetchIngredData = async (ingredients) => {
   // 특정 재료 데이터의 id 값을 얻기 위해 불러옴
   const ingredRes = await fetch(

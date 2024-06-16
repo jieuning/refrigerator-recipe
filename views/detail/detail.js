@@ -1,5 +1,4 @@
 import { PublicTabBar } from "../../public/js/tabBar.js";
-import { API_KEY } from "../../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -36,6 +35,8 @@ let bool;
 const localBookmark = bookmarkId();
 localBookmark.includes(pageParams) ? (bool = false) : (bool = true);
 
+const API_KEY =
+  "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
 const detailFetchData = async () => {
   const basicUrl = new URL(
     `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1?RECIPE_ID=${pageParams}`
