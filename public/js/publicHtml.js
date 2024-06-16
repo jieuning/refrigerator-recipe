@@ -21,7 +21,7 @@ export const ItemCardHtml = (data) => {
   return `
               <li class="item_list">
                   <div class="img_wrap">
-                      <a href=${`http://127.0.0.1:5500/views/detail/index.html#?id=${data.RECIPE_ID}`}>
+                      <a href=${`http://127.0.0.1:5500/../../views/detail/index.html#?id=${data.RECIPE_ID}`}>
                         <span class="background_img" 
                             style="background-image: url('../../image/recipe_${
                               data.RECIPE_ID <= 100 ? data.RECIPE_ID : "no"

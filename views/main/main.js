@@ -1,5 +1,5 @@
-import { PublicTabBar } from "../public/js/tabBar.js";
-import { WarningModal } from "../public/js/modal.js";
+import { PublicTabBar } from "../../public/js/tabBar.js";
+import { WarningModal } from "../../public/js/modal.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -19,7 +19,7 @@ const emptyHtml = () => {
           <div class="empty_wrap">
             <img
               class="empty_icon"
-              src="../../image/ refrigerator_icon.png"
+              src="../../image/refrigerator_icon.png"
               alt="냉장고 아이콘"
             />
             <span class="empty_title">

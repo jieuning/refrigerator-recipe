@@ -1,5 +1,5 @@
-import { PublicTabBar } from "../public/js/tabBar.js";
-import { ItemCardHtml } from "../public/js/publicHtml.js";
+import { PublicTabBar } from "../../public/js/tabBar.js";
+import { ItemCardHtml } from "../../public/js/publicHtml.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {

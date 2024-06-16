@@ -1,5 +1,5 @@
-import { PublicTabBar } from "../public/js/tabBar.js";
-import { API_KEY } from "../public/js/apiKey.js";
+import { PublicTabBar } from "../../public/js/tabBar.js";
+import { API_KEY } from "../../public/js/apiKey.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
