@@ -30,6 +30,9 @@
 }
 
 .detail_bookmark {
+  position: absolute;
+  right: 26px;
+  bottom: 0;
   cursor: pointer;
 }
 
@@ -51,9 +54,14 @@
   position: fixed;
   top: 0;
   width: 100%;
-  height: 64px;
+  height: 50px;
   padding: 10px 20px;
   background-color: transparent;
+  transition: 0.4s ease;
+}
+
+.prev_nav.active {
+  background-color: #fff;
 }
 
 .prev_btn {

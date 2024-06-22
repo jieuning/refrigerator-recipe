@@ -34,18 +34,13 @@ const pageParams = new URLSearchParams(pageUrl.search).get("id");
 let bool;
 const localBookmark = bookmarkId();
 localBookmark.includes(pageParams) ? (bool = false) : (bool = true);
+const serverUrl = "http://rational-viole-cc4fd-aed52-77c17265.koyeb.app";
 
-const API_KEY =
-  "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
 const detailFetchData = async () => {
-  const basicUrl = new URL(
-    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1?RECIPE_ID=${pageParams}`
-  );
-  const recipeUrl = new URL(
-    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000228_1?RECIPE_ID=${pageParams}`
-  );
+  const basicUrl = new URL(`${serverUrl}/api/base/detail?id=${pageParams}`);
+  const recipeUrl = new URL(`${serverUrl}/api/recipe/detail?id=${pageParams}`);
   const ingredUrl = new URL(
-    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000227_1?RECIPE_ID=${pageParams}`
+    `${serverUrl}/api/ingredient/detail?id=${pageParams}`
   );
 
   try {
@@ -58,6 +53,17 @@ const detailFetchData = async () => {
     const [basicResult, recipeResult, ingredResult] = await Promise.all(
       allRes.map((res) => res.json())
     );
+
+    if (
+      !basicResult.Grid_20150827000000000226_1 &&
+      !basicResult.Grid_20150827000000000226_1.row &&
+      !recipeResult.Grid_20150827000000000228_1 &&
+      !recipeResult.Grid_20150827000000000228_1.row &&
+      !ingredResult.Grid_20150827000000000227_1 &&
+      !ingredResult.Grid_20150827000000000227_1.row
+    ) {
+      throw Error("데이터를 가져오는 중 에러가 발생했습니다.");
+    }
 
     // 사용할 데이터
     const basicData = basicResult.Grid_20150827000000000226_1.row;
@@ -92,6 +98,18 @@ const detailFetchData = async () => {
     prevBtn.addEventListener("click", () => {
       history.go(-1);
     });
+
+    const detailNav = document.querySelector(".detail_img .prev_nav");
+    console.log(detailNav);
+
+    window.onscroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 10) {
+        detailNav.classList.add("active");
+      } else {
+        detailNav.classList.remove("active");
+      }
+    };
   } catch (error) {
     console.log(error.message);
   }
@@ -100,19 +118,25 @@ detailFetchData();
 
 const detailWrap = document.querySelector(".detail_wrap");
 const baseHtmlRender = (basicData, ingredData, recipeData) => {
+  console.log(basicData);
   detailWrap.innerHTML = `
         <section class="detail_img">
             <nav class="prev_nav">
                 <div class="prev_btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2.5rem" height="2.5rem" viewBox="0 0 24 24">
-                        <path fill="#1e1e1e"
-                            d="M12.727 3.687a1 1 0 1 0-1.454-1.374l-8.5 9a1 1 0 0 0 0 1.374l8.5 9.001a1 1 0 1 0 1.454-1.373L4.875 12z" />
-                    </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24">
+                    <path fill="#1e1e1e" d="m4.296 12l8.492-8.727a.75.75 0 1 0-1.075-1.046l-9 9.25a.75.75 0 0 0 0 1.046l9 9.25a.75.75 0 1 0 1.075-1.046z"/>
+                  </svg>
                 </div>
             </nav>
             <img src="../../image/recipe_${
               basicData[0].RECIPE_ID <= 100 ? basicData[0].RECIPE_ID : "no"
             }.jpeg" />
+            <div class="detail_bookmark">
+              <svg xmlns="http://www.w3.org/2000/svg" width="2.5rem" height="2.5rem" viewBox="0 0 10 15">
+               <path fill="#e1e1e1"
+                 d="M3.5 2a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .765.424L7.5 11.59l3.735 2.334A.5.5 0 0 0 12 13.5v-11a.5.5 0 0 0-.5-.5z"/>
+              </svg>
+            </div>
         </section>
         <section class="detail_top detail_section">
             <div class="detail_tag">
@@ -125,12 +149,6 @@ const baseHtmlRender = (basicData, ingredData, recipeData) => {
                 <div class="title_wrap">
                     <h1 class="title">${basicData[0].RECIPE_NM_KO}</h1>
                     <p class="summery_txt">${basicData[0].SUMRY}</p>
-                </div>
-                <div class="detail_bookmark">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="2.5rem" height="2.5rem" viewBox="0 0 10 15">
-                  <path fill="#e1e1e1"
-                    d="M3.5 2a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .765.424L7.5 11.59l3.735 2.334A.5.5 0 0 0 12 13.5v-11a.5.5 0 0 0-.5-.5z"/>
-                 </svg>
                 </div>
             </div>
         </section>

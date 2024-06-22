@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="public/style/common.css">
-    <link rel="stylesheet" href="views/main/main.css">
-    <script type="module" src="views/main/main.js"></script>
+    <link rel="icon" type="image/png" href="./image/refrigerator_icon.png">
+    <link rel="stylesheet" href="./public/style/common.css">
+    <link rel="stylesheet" href="./views/main/main.css">
+    <script type="module" src="./views/main/main.js"></script>
     <title>냉장고 비우기</title>
 </head>
 
@@ -20,10 +21,13 @@
             </div>
         </header>
         <section class="main"></section>
-        <a href="http://127.0.0.1:5500/views/customized/index.html#">
+        <a href="./views/customized/index.html#">
             <button class="costomized_btn">맞춤 레시피 보기</button>
         </a>
-        <button class="open_modal_btn"></button>
+        <div class="open_modal_btn_wrap">
+            <span class="ballon">버튼을 클릭해 재료를 추가해보세요!</span>
+            <button class="open_modal_btn"></button>
+        </div>
         <nav class="add_modal">
             <div class="add_modal_wrap">
                 <span class="modal_close"></span>

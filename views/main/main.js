@@ -13,6 +13,8 @@ let getIngred = JSON.parse(localStorage.getItem("ingredient")) || [];
 const mainSection = document.querySelector(".main");
 const allRemoveBtn = document.querySelector(".all_remove_btn");
 const costomizedBtn = document.querySelector(".costomized_btn");
+const ballon = document.querySelector(".ballon");
+console.log(ballon);
 
 const emptyHtml = () => {
   return `
@@ -32,6 +34,7 @@ const emptyHtml = () => {
 // 로컬 데이터가 없을 때 보여줄 화면
 if (getIngred.length === 0) {
   mainSection.innerHTML = emptyHtml();
+  ballon.style.display = "block";
 }
 
 const openModalBtn = document.querySelector(".open_modal_btn");
@@ -140,7 +143,7 @@ const clickSubmitBtn = () => {
       costomizedBtn.classList.add("on");
     }
 
-    if (dDay > -1) {
+    if (dDay === 0) {
       message = "이미 지난 일자는 선택할 수 없습니다.";
       WarningModal(message);
 
@@ -229,8 +232,10 @@ const renderHtml = () => {
       message = "총 10개까지만 추가가 가능합니다.";
       WarningModal(message);
     }
+    ballon.style.display = "none";
   } else {
     mainSection.innerHTML = emptyHtml();
+    ballon.style.display = "block";
   }
 
   // 삭제 버튼 클릭시 이벤트

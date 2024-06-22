@@ -98,13 +98,49 @@
 }
 
 /* 추가하기 버튼 */
-.open_modal_btn {
+.open_modal_btn_wrap {
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  right: 0;
+  bottom: 68px;
+}
+
+/* 말풍선 안내 */
+.ballon {
+  display: none;
+  position: relative;
+  background: #ebf2e9;
+  margin-right: 25px;
+  padding: 6px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #414141;
+  word-break: keep-all;
+}
+
+.ballon:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 95%;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-top-color: #ebf2e9;
+  border-bottom: 0;
+  border-left: 0;
+  margin-left: -10px;
+  margin-bottom: -8px;
+}
+
+/* 재료 추가 모달 열기 버튼 */
+.open_modal_btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  right: 0;
-  bottom: 68px;
+  align-self: flex-end;
   width: 48px;
   height: 48px;
   margin: 0 25px 25px 0;
@@ -213,6 +249,7 @@
   font-weight: 600;
   color: #fff;
   background-color: #58b93f;
+  word-break: keep-all;
 }
 
 .costomized_btn.on {

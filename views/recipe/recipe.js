@@ -1,5 +1,6 @@
 import { PublicTabBar } from "../../public/js/tabBar.js";
 import { ItemCardHtml } from "../../public/js/publicHtml.js";
+import { SkeletonCardHtml } from "../../public/js/publicHtml.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -8,20 +9,29 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
+const recipeLists = document.querySelector(".item_lists");
+
+// 스켈레톤 카드를 검색된 아이템 수 만큼 표시
+const showSkeletonCards = (count) => {
+  recipeLists.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    recipeLists.innerHTML += SkeletonCardHtml();
+  }
+};
+
 const levelArr = ["초보환영", "보통", "어려움"];
 const itemFilters = document.querySelectorAll(".recipe_filter span");
 let currentTarget = itemFilters[0];
 let currentPage = 1;
 const maxPage = 10;
 
-const API_KEY =
-  "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
+const serverUrl = "http://rational-viole-cc4fd-aed52-77c17265.koyeb.app";
 const fetchData = async (page = 1) => {
-  const url = new URL(
-    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1/1/${page}0`
-  );
+  const url = new URL(`${serverUrl}/api/base/pagination?page=${page}`);
 
   try {
+    showSkeletonCards(10);
+
     const res = await fetch(url);
     if (!res.ok) {
       throw new Error(`에러 발생: ${res.status}`);
@@ -56,8 +66,6 @@ const fetchData = async (page = 1) => {
 };
 
 fetchData();
-
-const recipeLists = document.querySelector(".item_lists");
 
 const recipeListRender = (sortedData, target = currentTarget) => {
   recipeLists.innerHTML = "";
@@ -192,22 +200,20 @@ const addBookmarkListeners = (data) => {
 };
 
 const handleIntersect = (entries, observer) => {
-  setTimeout(() => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        // 관찰 해제
-        observer.unobserve(entry.target);
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      // 관찰 해제
+      observer.unobserve(entry.target);
 
-        if (currentPage < maxPage) {
-          // 페이지가 렌더링이 되기도 전에 감지해서
-          currentPage++;
-          fetchData(currentPage);
-        } else {
-          observer.disconnect();
-        }
+      if (currentPage < maxPage) {
+        // 페이지가 렌더링이 되기도 전에 감지해서
+        currentPage++;
+        fetchData(currentPage);
+      } else {
+        observer.disconnect();
       }
-    });
-  }, 800);
+    }
+  });
 };
 
 const setObserver = () => {

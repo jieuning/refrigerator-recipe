@@ -1,5 +1,6 @@
 import { PublicTabBar } from "../../public/js/tabBar.js";
 import { ItemCardHtml } from "../../public/js/publicHtml.js";
+import { SkeletonCardHtml } from "../../public/js/publicHtml.js";
 
 // 공용 탭바 렌더링
 const tabBarRender = () => {
@@ -8,12 +9,25 @@ const tabBarRender = () => {
 };
 tabBarRender();
 
-const API_KEY =
-  "66c340d78ebbaf115f7216a55a2b2de11e2a215b696439ef449586096f885f49";
+const itemLists = document.querySelector(".item_lists");
+
+// 로딩 텍스트를 표시하는 함수
+const showLoadingText = () => {
+  itemLists.innerHTML = '<div class="loading">레시피를 찾고 있습니다</div>';
+};
+
+// 스켈레톤 로딩 카드를 검색된 아이템 수 만큼 표시
+const showSkeletonCards = (count) => {
+  itemLists.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    itemLists.innerHTML += SkeletonCardHtml();
+  }
+};
+
 const fetchIngredData = async (ingredients) => {
   // 특정 재료 데이터의 id 값을 얻기 위해 불러옴
   const ingredRes = await fetch(
-    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000227_1?IRDNT_NM=${ingredients}`
+    `http://rational-viole-cc4fd-aed52-77c17265.koyeb.app/api/ingredient/id?ingredient=${ingredients}`
   );
   if (!ingredRes.ok) {
     throw new Error(response.statusText);
@@ -27,11 +41,10 @@ const fetchIngredAllData = async (ingredients) => {
   return Promise.all(promises);
 };
 
+const serverUrl = "http://rational-viole-cc4fd-aed52-77c17265.koyeb.app";
 const fetchBaseData = async (id) => {
   // 재료 데이터의 id 값을 통해 base데이터를 가져온다.
-  const baseRes = await fetch(
-    `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1?RECIPE_ID=${id}`
-  );
+  const baseRes = await fetch(`${serverUrl}/api/base/detail?id=${id}`);
   if (!baseRes.ok) {
     throw new Error(response.statusText);
   }
@@ -46,6 +59,8 @@ const fetchBaseAllData = async (recipeId) => {
 
 const getRecipeData = async () => {
   try {
+    showLoadingText(); // 로딩 텍스트 표시
+
     let ingredients = [];
     const getIngred = JSON.parse(localStorage.getItem("ingredient"));
 
@@ -56,54 +71,57 @@ const getRecipeData = async () => {
     // 재료의 id를 얻기 위한 fetch 데이터
     const ingredResult = await fetchIngredAllData(ingredients);
 
-    if (ingredResult !== undefined) {
-      // 중복 없애기 위해 set사용
-      let recipeId = new Set();
+    // 중복 없애기 위해 set사용
+    let recipeId = new Set();
 
-      ingredResult.forEach((data) => {
-        const rows = data.Grid_20150827000000000227_1.row;
-        if (rows.length !== 0) {
-          rows.forEach((id) => {
-            // 중복되는 id가 있다면 제거 후 추가
-            recipeId.add(id.RECIPE_ID);
-          });
-        }
-      });
-      recipeId = Array.from(recipeId);
-
-      // 재료의 id를 통해 베이스 레시피 데이터 가져오기
-      const baseResult = await fetchBaseAllData(recipeId);
-      const baseData = baseResult.map(
-        (result) => result.Grid_20150827000000000226_1.row[0]
-      );
-
-      const itemLists = document.querySelector(".item_lists");
-      if (baseData.length !== 0) {
-        baseData.forEach((data) => {
-          itemLists.innerHTML += ItemCardHtml(data);
+    ingredResult.forEach((data) => {
+      const rows = data.Grid_20150827000000000227_1.row;
+      if (rows.length !== 0) {
+        rows.forEach((id) => {
+          // 중복되는 id가 있다면 제거 후 추가
+          recipeId.add(id.RECIPE_ID);
         });
+      }
+    });
+    recipeId = Array.from(recipeId);
 
-        const bookmarks = document.querySelectorAll(".bookmark");
-        const itemLink = document.querySelectorAll(".img_wrap a");
+    // 검색된 아이템 수만큼 스켈레톤 로딩 화면을 표시
+    showSkeletonCards(recipeId.length);
 
-        for (let i = 0; i < bookmarks.length; i++) {
-          bookmarks[i].addEventListener("click", () => {
-            let bookmarkId = bookmarks[i].getAttribute("data-id");
-            // 필터링된 데이터 전달
-            clickBookmarkBtn(i, bookmarks, baseData, bookmarkId);
-          });
-        }
+    // 재료의 id를 통해 베이스 레시피 데이터 가져오기
+    const baseResult = await fetchBaseAllData(recipeId);
+    const baseData = baseResult.map(
+      (result) => result.Grid_20150827000000000226_1.row[0]
+    );
 
-        bookmarkState(itemLink);
-      } else {
-        itemLists.innerHTML = emptyHtml();
+    // 데이터를 모두 가져왔으므로 스켈레톤 로딩 화면을 지움
+    itemLists.innerHTML = "";
+
+    if (baseData.length !== 0) {
+      baseData.forEach((data) => {
+        itemLists.innerHTML += ItemCardHtml(data);
+      });
+
+      const bookmarks = document.querySelectorAll(".bookmark");
+      const itemLink = document.querySelectorAll(".img_wrap a");
+
+      for (let i = 0; i < bookmarks.length; i++) {
+        bookmarks[i].addEventListener("click", () => {
+          let bookmarkId = bookmarks[i].getAttribute("data-id");
+          // 필터링된 데이터 전달x
+          clickBookmarkBtn(i, bookmarks, baseData, bookmarkId);
+        });
       }
 
-      const prevBtn = document.querySelector(".prev_btn");
-      prevBtn.addEventListener("click", () => {
-        history.go(-1);
-      });
+      bookmarkState(itemLink);
+    } else {
+      itemLists.innerHTML = emptyHtml();
     }
+
+    const prevBtn = document.querySelector(".prev_btn");
+    prevBtn.addEventListener("click", () => {
+      history.go(-1);
+    });
   } catch (error) {
     console.log(error.message);
   }
